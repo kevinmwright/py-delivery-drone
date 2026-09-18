@@ -7,7 +7,7 @@ class BaseRobot:
     def __init__(self,
                  name: str,
                  weight: int,
-                 coords: list[int] = None) -> None:
+                 coords: list[int] | None = None) -> None:
         if coords is None:
             coords = [0, 0]
         self.name = name
@@ -34,7 +34,7 @@ class FlyingRobot(BaseRobot):
     def __init__(self,
                  name: str,
                  weight: int,
-                 coords: list[int] = None) -> None:
+                 coords: list[int] | None = None) -> None:
         if coords is None:
             coords = [0, 0, 0]
         super().__init__(name, weight, coords[:2])
@@ -51,9 +51,11 @@ class DeliveryDrone(FlyingRobot):
     def __init__(self,
                  name: str,
                  weight: int,
-                 coords: list[int] = [0, 0, 0],
+                 coords: list[int] | None = None,
                  max_load_weight: int = 100,
                  current_load: Cargo = None) -> None:
+        if coords is None:
+            coords = [0, 0, 0]
         super().__init__(name, weight, coords)
         self.max_load_weight = max_load_weight
         self.current_load = None
@@ -66,6 +68,5 @@ class DeliveryDrone(FlyingRobot):
             self.current_load = load
 
     def unhook_load(self) -> None:
-        if self.current_load is None:
-            raise ValueError("No load to unhook.")
-        self.current_load = None
+        if self.current_load is not None:
+            self.current_load = None
